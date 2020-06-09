@@ -6,7 +6,16 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "yolact"))
 import rospy
 import rospkg
+
+# Import Python3's opencv instead of using ROS's opencv built using Python2.7
+import sys
+ros_python_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+if ros_python_path in sys.path:
+    # Remove ROS's Python path from the PATH variable
+    sys.path.remove(ros_python_path)
 import cv2
+sys.path.append(ros_python_path) # Restore the PATH variable
+
 import threading
 from queue import Queue
 from std_msgs.msg import String
@@ -364,7 +373,7 @@ def main(args):
   rospack = rospkg.RosPack()
   yolact_path = rospack.get_path('yolact_ros')
   
-  model_path_str = rospy.get_param('~model_path', os.path.join(yolact_path, "scripts/yolact/weights/yolact_plus_base_54_800000.pth"))
+  model_path_str = rospy.get_param('~model_path', os.path.join(yolact_path, "scripts/yolact/weights/yolact_base_54_800000.pth"))
   model_path = SavePath.from_str(model_path_str)
   set_cfg(model_path.model_name + '_config')
 
